@@ -9,7 +9,9 @@ function PublicLayout() {
     <>
       <Nav />
       {/* <Header /> */}
-      <Outlet />
+      <section className="container-fluid">
+        <Outlet />
+      </section>
       <Footer />
     </>
   );
