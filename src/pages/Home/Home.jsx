@@ -1,34 +1,29 @@
-import React from "react";
-import { Container, Box, Typography } from "@mui/material";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchQuotes } from "../../redux";
+import Loader from "../../components/Loader";
+
 function Home() {
+  const blogsData = useSelector((state) => state.quotes);
+  const { quotes, loading, error } = blogsData;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchQuotes());
+  }, []);
+
   return (
-    <Container maxWidth="xl">
-      <Box>
-        <Typography sx={{ mt: 1.5 }} variant="body1">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem natus
-          quos dolor, odio qui enim quo dolorem iusto, veniam minima officiis
-          quaerat ducimus ad, est tempora veritatis beatae sint unde? Lorem
-          ipsum dolor sit amet, consectetur adipisicing elit. Autem natus quos
-          dolor, odio qui enim quo dolorem iusto, veniam minima officiis quaerat
-          ducimus ad, est tempora veritatis beatae sint unde? Lorem ipsum dolor
-          sit amet, consectetur adipisicing elit. Autem natus quos dolor, odio
-          qui enim quo dolorem iusto, veniam minima officiis quaerat ducimus ad,
-          est tempora veritatis beatae sint unde? Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Autem natus quos dolor, odio qui enim
-          quo dolorem iusto, veniam minima officiis quaerat ducimus ad, est
-          tempora veritatis beatae sint unde? Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Autem natus quos dolor, odio qui enim
-          quo dolorem iusto, veniam minima officiis quaerat ducimus ad, est
-          tempora veritatis beatae sint unde? Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Autem natus quos dolor, odio qui enim
-          quo dolorem iusto, veniam minima officiis quaerat ducimus ad, est
-          tempora veritatis beatae sint unde? Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Autem natus quos dolor, odio qui enim
-          quo dolorem iusto, veniam minima officiis quaerat ducimus ad, est
-          tempora veritatis beatae sint unde?
-        </Typography>
-      </Box>
-    </Container>
+    <section>
+      <div>
+        {
+          loading ? <Loader /> :
+          quotes.map((item) =>(<div key={item.id} sx={{ mt: 1.5 }}>
+          {item.quote}
+        </div>))
+        }
+        
+      </div>
+    </section>
   );
 }
 
