@@ -6,5 +6,8 @@ export {
   checkAuth,
   getProfile,
 } from "./authentication/actions";
+export {
+  fetchQuotes,
+} from "./quotes/actions";
 
 
