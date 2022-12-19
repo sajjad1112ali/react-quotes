@@ -18,7 +18,7 @@ function PrivateLayout() {
       <section className="container-fluid">
         <Outlet />
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </>
   ) : (
     <Navigate replace to="/login" state={{ from: location }} />

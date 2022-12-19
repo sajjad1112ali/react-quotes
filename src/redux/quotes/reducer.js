@@ -6,9 +6,11 @@ const {
 
 const initialState = {
   loading: false,
-  isSubmitting: false,
   quotes: [],
+  quotesLikedBy: [],
   error: "",
+
+  isSubmitting: false,
   singleQuote: null,
   isEdit: false,
   deleteError: "",
@@ -25,10 +27,12 @@ const reducer = (state = initialState, action) => {
         singleQuote: null,
       };
     case GET_QUOTES_REQUEST_SUCCESS:
+     const { quotes, quotesLikedBy } = action.payload
       return {
         ...state,
         loading: false,
-        quotes: action.payload,
+        quotes,
+        quotesLikedBy,
         error: "",
       };
     case GET_QUOTES_REQUEST_FAILURE:
@@ -36,6 +40,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: false,
         quotes: [],
+        quotesLikedBy: [],
         error: action.payload,
       };
     default:

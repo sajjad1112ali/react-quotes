@@ -12,7 +12,7 @@ function PublicLayout() {
       <section className="container-fluid">
         <Outlet />
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

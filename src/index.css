@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap");
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.quotes {
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+}
+
+.quotes p::before,
+.quotes p::after {
+  content: "“";
+  font-family: Georgia;
+  font-size: 3rem;
+  margin: -1.5rem 0 0 -1.5rem;
+  position: absolute;
+  opacity: 0.5;
+}
+.quotes p::after {
+  content: "”";
+  margin: -0.5rem 0rem 0 0.3rem;
+}
+.firs-quote {
+  padding-left: 55px;
+}
+.quote-footer {
+  position: absolute;
+  bottom: 8px;
+  right: 16px;
+}
+
+.quote-footer-left {
+  left: 16px;
+}
+.quote-footer span {
+  margin-top: 7px;
+  margin-right: 5px;
+}
