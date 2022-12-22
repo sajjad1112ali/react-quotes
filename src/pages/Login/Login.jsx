@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Formik, Form } from "formik";
@@ -16,7 +16,6 @@ function MUILoginForm() {
   const { error } = authenticationData;
   const dispatch = useDispatch();
   const token = getToken();
-  if (token) return <Navigate replace to="/" />;
 
   const initialValues = {
     email: "sajjadramzan1211@gmail.com",
@@ -25,9 +24,7 @@ function MUILoginForm() {
     // password: "",
   };
   const onSubmit = (values, onSubmitProps) => {
-    dispatch(loginUser(values, navigate));
-    onSubmitProps.setSubmitting(false);
-    // onSubmitProps.resetForm();
+    dispatch(loginUser(values, navigate, onSubmitProps));
   };
 
   const validationSchema = yup.object({
@@ -35,56 +32,60 @@ function MUILoginForm() {
     password: yup.string().required("Required"),
   });
 
-  return (
-    <Box autoComplete="off">
-      <Formik
-        onSubmit={onSubmit}
-        validationSchema={validationSchema}
-        initialValues={initialValues}
-      >
-        {(formik) => {
-          return (
-            <Box
-              height="50vh"
-              width="100%"
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Form noValidate>
-                {error && <Alert severity="error">{error}</Alert>}
+  if (token) {
+    navigate("/", { replace: true });
+  } else {
+    return (
+      <Box autoComplete="off">
+        <Formik
+          onSubmit={onSubmit}
+          validationSchema={validationSchema}
+          initialValues={initialValues}
+        >
+          {(formik) => {
+            return (
+              <Box
+                height="50vh"
+                width="100%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Form noValidate>
+                  {error ? <Alert severity="error">{error}</Alert> : null}
 
-                <FormikControll
-                  controll="mui-input"
-                  type="text"
-                  label="Email"
-                  name="email"
-                  sx={{ mt: 2, mb: 2 }}
-                />
-                <FormikControll
-                  controll="mui-input"
-                  type="text"
-                  label="Password"
-                  name="password"
-                />
-                <Box textAlign="center">
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    type="submit"
-                    disabled={!formik.isValid || formik.isSubmitting}
-                    sx={{ mt: 2 }}
-                  >
-                    Submit
-                  </Button>
-                </Box>
-              </Form>
-            </Box>
-          );
-        }}
-      </Formik>
-    </Box>
-  );
+                  <FormikControll
+                    controll="mui-input"
+                    type="text"
+                    label="Email"
+                    name="email"
+                    sx={{ mt: 2, mb: 2 }}
+                  />
+                  <FormikControll
+                    controll="mui-input"
+                    type="text"
+                    label="Password"
+                    name="password"
+                  />
+                  <Box textAlign="center">
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      type="submit"
+                      disabled={!formik.isValid || formik.isSubmitting}
+                      sx={{ mt: 2 }}
+                    >
+                      Submit
+                    </Button>
+                  </Box>
+                </Form>
+              </Box>
+            );
+          }}
+        </Formik>
+      </Box>
+    );
+  }
 }
 
 export default MUILoginForm;

@@ -16,15 +16,14 @@ import { logoutUser, getProfile } from "../../../redux";
 import { getToken } from "../../../redux/utils";
 const APP_NAME = process.env.REACT_APP_NAME;
 
-function Nav() {
+function CircleMenuItems() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const authenticationData = useSelector((state) => state.authentication);
   const { currentUser, error } = authenticationData;
-
   const token = getToken();
-
+  console.log(`token = ${token}`);
   useEffect(() => {
     if (token) {
       dispatch(getProfile());
@@ -34,29 +33,6 @@ function Nav() {
   const logOutOrLogin = () => {
     token ? dispatch(logoutUser(navigate)) : navigate("/login");
   };
-
-  const items = [
-    {
-      name: "Login",
-      label: "Login",
-      icon: <LoginIcon />,
-      onPress: logOutOrLogin,
-    },
-  ];
-  const logedInItems = [
-    {
-      name: "Logout",
-      label: "Logout",
-      icon: <LoginIcon />,
-      onPress: logOutOrLogin,
-    },
-    {
-      name: "Dashboar",
-      label: "Dashboar",
-      icon: <DashboardIcon />,
-    },
-  ];
-  const navItems = token ? logedInItems : items;
 
   return (
     <div
@@ -75,16 +51,31 @@ function Nav() {
          */
         rotationAngleInclusive={false}
       >
-        {navItems.map((i) => (
-          <CircleMenuItem
-            onClick={() => i.onPress()}
-            tooltip={i.label}
-            tooltipPlacement={TooltipPlacement.Right}
-            key={i.name}
-          >
-            {i.icon}
-          </CircleMenuItem>
-        ))}
+        {token ? (
+          <>
+            <CircleMenuItem
+              onClick={() => logOutOrLogin()}
+              tooltip="Logout"
+              tooltipPlacement={TooltipPlacement.Right}
+            >
+              <LoginIcon />
+            </CircleMenuItem>
+            <CircleMenuItem tooltip="Dashbaord">
+              <DashboardIcon />
+            </CircleMenuItem>
+          </>
+        ) : (
+          <>
+            <CircleMenuItem
+              onClick={() => logOutOrLogin()}
+              tooltip="Login"
+              tooltipPlacement={TooltipPlacement.Right}
+            >
+              <LoginIcon />
+            </CircleMenuItem>
+          </>
+        )}
+
         {/* <CircleMenuItem
           onClick={() => logOutOrLogin()}
           tooltip={token ? "Logout" : "Login"}
@@ -95,9 +86,12 @@ function Nav() {
 
         <CircleMenuItem tooltip="Dashbaord">
           <DashboardIcon />
-        </CircleMenuItem> */}
+        </CircleMenuItem>
+
+
+         */}
       </CircleMenu>
     </div>
   );
 }
-export default Nav;
+export default CircleMenuItems;

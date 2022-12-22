@@ -1,4 +1,6 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 import {
   common,
   blue,
@@ -16,14 +18,19 @@ import {
   yellow,
 } from "@mui/material/colors";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Grid, Box, Typography } from "@mui/material";
 
+import { getToken } from "../../redux/utils";
+
 function Quotes({ quotes, currentUser }) {
-  console.log(currentUser)
-  const logedInUserId = currentUser ? currentUser.id : '';
+  const navigate = useNavigate();
+
+  console.log(currentUser);
+  const token = getToken();
+  const logedInUserId = currentUser ? currentUser.id : "";
   const colors = {
     1: yellow,
     2: blue,
@@ -57,6 +64,13 @@ function Quotes({ quotes, currentUser }) {
   };
   const randomIntFromInterval = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
+  };
+
+  const handleFavourite = () => {
+    token ? console.log("Favourite click") : navigate("/login");
+  };
+  const handleLike = () => {
+    token ? console.log("Like click") : navigate("/login");
   };
 
   const getColor = () => {
@@ -112,23 +126,27 @@ function Quotes({ quotes, currentUser }) {
                 {quote}
               </Typography>
               <Box className="quote-footer">
-                {
-                  likeBy.includes(logedInUserId)  ? <FavoriteIcon /> :  <FavoriteBorderIcon />
-                }
-               
-                
+                {likeBy.includes(logedInUserId) ? (
+                  <FavoriteIcon onClick={() => handleFavourite()} />
+                ) : (
+                  <FavoriteBorderIcon onClick={() => handleFavourite()} />
+                )}
               </Box>
-              <Box className="quote-footer quote-footer-left">
+              <Box
+                className="quote-footer quote-footer-left"
+                sx={{ width: "45px" }}
+              >
                 <div
                   style={{
                     display: "flex",
                     alignItems: "center",
                     flexWrap: "wrap",
+                    width: "45px",
                   }}
                 >
                   <span>{likeCounts}</span>
 
-                  <ThumbUpIcon />
+                  <ThumbUpIcon onClick={() => handleLike()} />
                 </div>
               </Box>
             </Box>

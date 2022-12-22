@@ -10,7 +10,7 @@ import {
   GET_PROFILE_FAILURE,
 } from "./types";
 
-import { setToken, getToken, deleteToken, getTokenHeader } from "../utils";
+import { setToken, getToken, deleteToken, getTokenHeader, restForm } from "../utils";
 
 const REACT_APP_APIS_URL = process.env.REACT_APP_APIS_URL;
 
@@ -58,7 +58,7 @@ const getProfileFailure = (error) => {
     data: error,
   };
 };
-export const loginUser = (data, navigate) => {
+export const loginUser = (data, navigate, formikForm) => {
   return (dispatch) => {
     const config = {
       method: "post",
@@ -71,13 +71,14 @@ export const loginUser = (data, navigate) => {
 
     axios(config)
       .then((response) => {
-        setToken(response.headers["x-auth-token"]);
-
-        dispatch(loginRequestSuccess(response.data));
-
         navigate("/");
+
+        setToken(response.headers["x-auth-token"]);
+        dispatch(loginRequestSuccess(response.data));
+        restForm(formikForm);
       })
       .catch((error) => {
+        restForm(formikForm, false);
         dispatch(loginRequestFailure(error.response.data.message));
       });
   };
@@ -148,8 +149,11 @@ export const getProfile = (id) => {
         dispatch(getProfileSuccess(response.data));
       })
       .catch((error) => {
-        console.log(error)
-        const msg = error.code === "ERR_NETWORK" ? "NETWOR ERROR":error.response.data.message
+        console.log(error);
+        const msg =
+          error.code === "ERR_NETWORK"
+            ? "NETWOR ERROR"
+            : error.response.data.message;
         dispatch(getProfileFailure(msg));
       });
   };

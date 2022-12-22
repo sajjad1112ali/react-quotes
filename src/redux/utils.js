@@ -38,6 +38,15 @@ const isObjectEmpty = (obj) => {
     Object.getPrototypeOf(obj) === Object.prototype
   );
 };
+
+
+const restForm = (formProps, reset = true) => {
+  formProps.setSubmitting(false);
+  if (reset) formProps.resetForm();
+  
+};
+
+
 module.exports = {
   isUserLogedIn,
   formatComment,
@@ -46,4 +55,5 @@ module.exports = {
   deleteToken,
   getTokenHeader,
   isObjectEmpty,
+  restForm,
 };
