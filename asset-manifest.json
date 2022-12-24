@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/react-quotes/static/css/main.f9c00c8a.css",
+    "main.js": "/react-quotes/static/js/main.9a72a5b8.js",
+    "index.html": "/react-quotes/index.html",
+    "main.f9c00c8a.css.map": "/react-quotes/static/css/main.f9c00c8a.css.map",
+    "main.9a72a5b8.js.map": "/react-quotes/static/js/main.9a72a5b8.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f9c00c8a.css",
+    "static/js/main.9a72a5b8.js"
+  ]
+}
