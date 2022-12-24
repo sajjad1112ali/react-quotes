@@ -14,7 +14,7 @@ import Login from "./pages/Login/Login";
 function App() {
   return (
     <Provider store={store}>
-      <Routes basename={process.env.PUBLIC_URL}>
+      <Routes>
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
