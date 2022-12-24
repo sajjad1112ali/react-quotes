@@ -14,8 +14,8 @@ import Login from "./pages/Login/Login";
 function App() {
   return (
     <Provider store={store}>
-      <Routes basename='/react-quotes'>
-        <Route path="/" element={<PublicLayout />}>
+      <Routes>
+        <Route path="/react-quotes" element={<PublicLayout />}>
           <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
         </Route>
