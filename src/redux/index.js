@@ -7,7 +7,7 @@ export {
   getProfile,
 } from "./authentication/actions";
 export {
-  fetchQuotes,
+  fetchQuotes, likeQuote,
 } from "./quotes/actions";
 
 

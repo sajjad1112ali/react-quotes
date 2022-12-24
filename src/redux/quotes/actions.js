@@ -7,6 +7,9 @@ const {
   GET_QUOTES_REQUEST,
   GET_QUOTES_REQUEST_SUCCESS,
   GET_QUOTES_REQUEST_FAILURE,
+  LIKE_QUOTE_REQUEST,
+  LIKE_QUOTE_REQUEST_SUCCESS,
+  LIKE_QUOTE_REQUEST_FAILURE,
 } = require("./types");
 
 const fetchQuotesRequest = () => {
@@ -28,6 +31,26 @@ const fetchQuotesFailure = (error) => {
     payload: error,
   };
 };
+// LIKE QUOTES
+const likeQuoteRequest = () => {
+  return {
+    type: LIKE_QUOTE_REQUEST,
+  };
+};
+
+const likeQuoteSuccess = (id) => {
+  return {
+    type: LIKE_QUOTE_REQUEST_SUCCESS,
+    payload: id,
+  };
+};
+
+const likeQuoteFailure = (error) => {
+  return {
+    type: LIKE_QUOTE_REQUEST_FAILURE,
+    payload: error,
+  };
+};
 
 const fetchQuotes = (type) => {
   let headers = {};
@@ -45,7 +68,7 @@ const fetchQuotes = (type) => {
       axios
         .get(url, { headers: { ...headers } })
         .then((response) => {
-          console.log(response.data)
+          console.log(response.data);
           dispatch(fetchQuotesSuccess(response.data));
         })
         .catch((error) => {
@@ -60,6 +83,27 @@ const fetchQuotes = (type) => {
   };
 };
 
-export {
-  fetchQuotes,
+const likeQuote = (id, type) => {
+  const uri = type === "like" ? "like" : "add-favourite";
+  const headers = getTokenHeader();
+  console.log(headers);
+  return (dispatch) => {
+    dispatch(likeQuoteRequest());
+    setTimeout(() => {
+      axios
+        .post(`${REACT_APP_APIS_URL}/quotes/${id}/${uri}`, null, {
+          headers,
+        })
+        .then((response) => {
+          console.log(response.data);
+          dispatch(likeQuoteSuccess(id));
+        })
+        .catch((error) => {
+          console.log(error);
+          dispatch(likeQuoteFailure(error.response.data.message));
+        });
+    }, 2000);
+  };
 };
+
+export { fetchQuotes, likeQuote };

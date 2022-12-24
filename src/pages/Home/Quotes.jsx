@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import {
   common,
@@ -21,12 +22,16 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+
 import { Grid, Box, Typography } from "@mui/material";
 
 import { getToken } from "../../redux/utils";
+import { likeQuote } from "../../redux";
 
 function Quotes({ quotes, currentUser }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   console.log(currentUser);
   const token = getToken();
@@ -66,11 +71,8 @@ function Quotes({ quotes, currentUser }) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
-  const handleFavourite = () => {
-    token ? console.log("Favourite click") : navigate("/login");
-  };
-  const handleLike = () => {
-    token ? console.log("Like click") : navigate("/login");
+  const handleUserAction = (id, type) => {
+    token ? dispatch(likeQuote(id, type)) : navigate("/login");
   };
 
   const getColor = () => {
@@ -82,13 +84,42 @@ function Quotes({ quotes, currentUser }) {
       forColor: combinations[randomeNumberForBgColor],
     };
   };
+
+  const renderUserAction = (counts, arr, type, id) => {
+    const iconHolder = {
+      favourite: { filled: FavoriteIcon, bordered: FavoriteBorderIcon },
+      like: { filled: ThumbUpIcon, bordered: ThumbUpOffAltIcon },
+    };
+    const IconToShow = arr.includes(logedInUserId)
+      ? iconHolder[type].filled
+      : iconHolder[type].bordered;
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexWrap: "wrap",
+          width: "45px",
+        }}
+      >
+        <span>{counts}</span>
+
+        <IconToShow onClick={() => handleUserAction(id, type)} />
+      </div>
+    );
+  };
+
   return (
-    <Grid container sx={{}}>
+    <Grid container>
       {quotes.map((elem, index) => {
-        const { id, quote, date, time, user, likeCounts, likeBy } = elem;
+        const { id, quote, date, time, user, likeCounts, likeBy, favouriteBy } =
+          elem;
+        let { bg, forColor } = elem;
         const dateTime = `${date} ${time}`;
         const { name } = user;
-        const { bg, forColor } = getColor();
+        let { bg: fbg, forColor: fForColor } = getColor();
+        elem.bg = bg ? bg : fbg;
+        elem.forColor = forColor ? forColor : fForColor;
         return (
           <Grid
             item
@@ -98,6 +129,7 @@ function Quotes({ quotes, currentUser }) {
               color: forColor,
               fontWeight: "bold",
               position: "relative",
+              border: "2px solid",
             }}
             px={2}
             pb={6}
@@ -126,28 +158,13 @@ function Quotes({ quotes, currentUser }) {
                 {quote}
               </Typography>
               <Box className="quote-footer">
-                {likeBy.includes(logedInUserId) ? (
-                  <FavoriteIcon onClick={() => handleFavourite()} />
-                ) : (
-                  <FavoriteBorderIcon onClick={() => handleFavourite()} />
-                )}
+                {renderUserAction(likeCounts, favouriteBy, "favourite", id)}
               </Box>
               <Box
                 className="quote-footer quote-footer-left"
                 sx={{ width: "45px" }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                    width: "45px",
-                  }}
-                >
-                  <span>{likeCounts}</span>
-
-                  <ThumbUpIcon onClick={() => handleLike()} />
-                </div>
+                {renderUserAction(likeCounts, likeBy, "like", id)}
               </Box>
             </Box>
           </Grid>
