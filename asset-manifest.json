@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/sajjad1112ali.github.io/react-quotes/static/css/main.f9c00c8a.css",
-    "main.js": "/sajjad1112ali.github.io/react-quotes/static/js/main.2de500fa.js",
-    "index.html": "/sajjad1112ali.github.io/react-quotes/index.html",
-    "main.f9c00c8a.css.map": "/sajjad1112ali.github.io/react-quotes/static/css/main.f9c00c8a.css.map",
-    "main.2de500fa.js.map": "/sajjad1112ali.github.io/react-quotes/static/js/main.2de500fa.js.map"
+    "main.css": "/static/css/main.f9c00c8a.css",
+    "main.js": "/static/js/main.e53325fe.js",
+    "index.html": "/index.html",
+    "main.f9c00c8a.css.map": "/static/css/main.f9c00c8a.css.map",
+    "main.e53325fe.js.map": "/static/js/main.e53325fe.js.map"
   },
   "entrypoints": [
     "static/css/main.f9c00c8a.css",
-    "static/js/main.2de500fa.js"
+    "static/js/main.e53325fe.js"
   ]
 }
