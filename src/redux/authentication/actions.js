@@ -149,7 +149,6 @@ export const getProfile = (id) => {
         dispatch(getProfileSuccess(response.data));
       })
       .catch((error) => {
-        console.log(error);
         const msg =
           error.code === "ERR_NETWORK"
             ? "NETWOR ERROR"

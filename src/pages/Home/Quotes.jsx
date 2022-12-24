@@ -33,7 +33,6 @@ function Quotes({ quotes, currentUser }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log(currentUser);
   const token = getToken();
   const logedInUserId = currentUser ? currentUser.id : "";
   const colors = {

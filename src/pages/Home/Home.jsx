@@ -6,7 +6,6 @@ import Loader from "../../components/Loader";
 import Quotes from "./Quotes";
 
 function Home() {
-  console.log("Rendering HOME PAGE. . .");
   const blogsData = useSelector((state) => state.quotes);
   const { quotes, loading, error } = blogsData;
 

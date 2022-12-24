@@ -23,7 +23,6 @@ function CircleMenuItems() {
   const authenticationData = useSelector((state) => state.authentication);
   const { currentUser, error } = authenticationData;
   const token = getToken();
-  console.log(`token = ${token}`);
   useEffect(() => {
     if (token) {
       dispatch(getProfile());

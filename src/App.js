@@ -10,17 +10,16 @@ import Error from "./pages/Error/Error";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 
-
 function App() {
   return (
     <Provider store={store}>
       <Routes>
-        <Route path="/react-quotes" element={<PublicLayout />}>
-          <Route path="/react-quotes" element={<Home />} />
-          <Route path="/react-quotes/login" element={<Login />} />
+        <Route path="/" element={<PublicLayout />}>
+          <Route index element={<Home />} />
+          <Route path="/login" element={<Login />} />
         </Route>
         <Route path="/chat" element={<PrivateLayout />}>
-          <Route path="" element={<Chat />} />
+          <Route index element={<Chat />} />
         </Route>
         <Route path="*" element={<Error />} />
       </Routes>

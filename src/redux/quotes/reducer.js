@@ -52,9 +52,7 @@ const reducer = (state = initialState, action) => {
       const { payload: id } = action;
       const { quotes: stQuote } = state;
       const inddex = stQuote.findIndex((q) => q.id === id);
-      console.log(`This is like ID = ${id}, --> ${inddex}`);
       state.quotes[0].likeBy.push(1);
-      console.log(state);
 
       return {
         ...state,

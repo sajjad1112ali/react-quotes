@@ -68,7 +68,6 @@ const fetchQuotes = (type) => {
       axios
         .get(url, { headers: { ...headers } })
         .then((response) => {
-          console.log(response.data);
           dispatch(fetchQuotesSuccess(response.data));
         })
         .catch((error) => {
@@ -86,7 +85,6 @@ const fetchQuotes = (type) => {
 const likeQuote = (id, type) => {
   const uri = type === "like" ? "like" : "add-favourite";
   const headers = getTokenHeader();
-  console.log(headers);
   return (dispatch) => {
     dispatch(likeQuoteRequest());
     setTimeout(() => {
@@ -95,11 +93,9 @@ const likeQuote = (id, type) => {
           headers,
         })
         .then((response) => {
-          console.log(response.data);
           dispatch(likeQuoteSuccess(id));
         })
         .catch((error) => {
-          console.log(error);
           dispatch(likeQuoteFailure(error.response.data.message));
         });
     }, 2000);
