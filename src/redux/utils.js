@@ -8,10 +8,11 @@ const setToken = (token) => {
 };
 
 const getToken = () => {
-  const now = new Date(Date.now()).getTime();
-  const timeAllowed = 1000 * 60 * 30;
-  const timeSinceLastLogin = now - localStorage.getItem("lastLoginTime");
   return localStorage.getItem("token");
+
+  // const now = new Date(Date.now()).getTime();
+  // const timeAllowed = 1000 * 60 * 30;
+  // const timeSinceLastLogin = now - localStorage.getItem("lastLoginTime");
   // if (timeSinceLastLogin < timeAllowed) {
   //   return localStorage.getItem("token");
   // }

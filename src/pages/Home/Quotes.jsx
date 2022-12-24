@@ -125,11 +125,10 @@ function Quotes({ quotes, currentUser }) {
             item
             key={id}
             sx={{
-              bgcolor: bg,
-              color: forColor,
+              bgcolor: elem.bg,
+              color: elem.forColor,
               fontWeight: "bold",
               position: "relative",
-              border: "2px solid",
             }}
             px={2}
             pb={6}
