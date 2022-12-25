@@ -20,6 +20,17 @@ const initialState = {
   addCommentError: "",
 };
 
+const quoteActionResponse = (payload, state) => {
+  const { data, uri: type } = payload;
+  const { quote_id, user_id } = data;
+  const index = state.quotes.findIndex((q) => q.id === quote_id);
+  const actionArray = type === "like" ? "likeBy" : "favouriteBy";
+  const actionCount = type === "like" ? "likeCounts" : "favouriteCounts";
+  state.quotes[index][actionArray].push(user_id);
+  state.quotes[index][actionCount] += 1;
+  return state;
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_QUOTES_REQUEST:
@@ -49,13 +60,11 @@ const reducer = (state = initialState, action) => {
     case LIKE_QUOTE_REQUEST:
       return state;
     case LIKE_QUOTE_REQUEST_SUCCESS:
-      const { payload: id } = action;
-      const { quotes: stQuote } = state;
-      const inddex = stQuote.findIndex((q) => q.id === id);
-      state.quotes[0].likeBy.push(1);
+      const { payload } = action;
+      const updatedState = quoteActionResponse(payload, state);
 
       return {
-        ...state,
+        ...updatedState,
       };
     case LIKE_QUOTE_REQUEST_FAILURE:
       return {

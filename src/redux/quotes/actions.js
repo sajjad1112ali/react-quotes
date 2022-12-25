@@ -1,7 +1,8 @@
 import axios from "axios";
 import { getTokenHeader } from "../utils";
+import { APIS_URL } from "../../config";
 
-const REACT_APP_APIS_URL = process.env.REACT_APP_APIS_URL;
+const REACT_APP_APIS_URL = APIS_URL;
 
 const {
   GET_QUOTES_REQUEST,
@@ -38,10 +39,12 @@ const likeQuoteRequest = () => {
   };
 };
 
-const likeQuoteSuccess = (id) => {
+const likeQuoteSuccess = (payload) => {
+  console.log(`payload`);
+  console.log(payload);
   return {
     type: LIKE_QUOTE_REQUEST_SUCCESS,
-    payload: id,
+    payload,
   };
 };
 
@@ -78,7 +81,7 @@ const fetchQuotes = (type) => {
 
           dispatch(fetchQuotesFailure(msg));
         });
-    }, 1000);
+    }, 500);
   };
 };
 
@@ -87,18 +90,16 @@ const likeQuote = (id, type) => {
   const headers = getTokenHeader();
   return (dispatch) => {
     dispatch(likeQuoteRequest());
-    setTimeout(() => {
-      axios
-        .post(`${REACT_APP_APIS_URL}/quotes/${id}/${uri}`, null, {
-          headers,
-        })
-        .then((response) => {
-          dispatch(likeQuoteSuccess(id));
-        })
-        .catch((error) => {
-          dispatch(likeQuoteFailure(error.response.data.message));
-        });
-    }, 2000);
+    axios
+      .post(`${REACT_APP_APIS_URL}/quotes/${id}/${uri}`, null, {
+        headers,
+      })
+      .then((response) => {
+        dispatch(likeQuoteSuccess({ ...response.data, uri }));
+      })
+      .catch((error) => {
+        dispatch(likeQuoteFailure(error.response.data.message));
+      });
   };
 };
 

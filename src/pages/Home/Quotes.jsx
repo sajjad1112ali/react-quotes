@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -26,6 +26,8 @@ import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 
 import { Grid, Box, Typography } from "@mui/material";
 
+import AlertDialog from "../../components/AlertDialog";
+
 import { getToken } from "../../redux/utils";
 import { likeQuote } from "../../redux";
 
@@ -33,6 +35,9 @@ function Quotes({ quotes, currentUser }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [open, setOpen] = useState(false);
+  const [selectedQuote, setSelectedQuote] = useState(null);
+  const [actionType, setActionType] = useState(null);
   const token = getToken();
   const logedInUserId = currentUser ? currentUser.id : "";
   const colors = {
@@ -70,8 +75,17 @@ function Quotes({ quotes, currentUser }) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
-  const handleUserAction = (id, type) => {
-    token ? dispatch(likeQuote(id, type)) : navigate("/login");
+  const handleUserAction = (id, type, isLikedOrFavt) => {
+    if (token) {
+      if (isLikedOrFavt && type === "like") {
+        return;
+      }
+      setSelectedQuote(id);
+      setActionType(type);
+      handleClickOpen();
+    } else {
+      navigate("/login");
+    }
   };
 
   const getColor = () => {
@@ -86,12 +100,23 @@ function Quotes({ quotes, currentUser }) {
 
   const renderUserAction = (counts, arr, type, id) => {
     const iconHolder = {
-      favourite: { filled: FavoriteIcon, bordered: FavoriteBorderIcon },
-      like: { filled: ThumbUpIcon, bordered: ThumbUpOffAltIcon },
+      favourite: {
+        filled: FavoriteIcon,
+        bordered: FavoriteBorderIcon,
+        classes: "",
+      },
+      like: {
+        filled: ThumbUpIcon,
+        bordered: ThumbUpOffAltIcon,
+        classes: "not-allowed",
+      },
     };
-    const IconToShow = arr.includes(logedInUserId)
+    const isUserInArray = arr.includes(logedInUserId);
+    const IconToShow = isUserInArray
       ? iconHolder[type].filled
       : iconHolder[type].bordered;
+    const classesToAdd =
+      isUserInArray && type !== "favourite" ? iconHolder[type].classes : "";
     return (
       <div
         style={{
@@ -103,72 +128,103 @@ function Quotes({ quotes, currentUser }) {
       >
         <span>{counts}</span>
 
-        <IconToShow onClick={() => handleUserAction(id, type)} />
+        <IconToShow
+          className={classesToAdd}
+          onClick={() => handleUserAction(id, type, isUserInArray)}
+        />
       </div>
     );
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (proceed) => {
+    setOpen(false);
+    if (proceed === "ok") {
+      dispatch(likeQuote(selectedQuote, actionType));
+    }
+  };
+
   return (
-    <Grid container>
-      {quotes.map((elem, index) => {
-        const { id, quote, date, time, user, likeCounts, likeBy, favouriteBy } =
-          elem;
-        let { bg, forColor } = elem;
-        const dateTime = `${date} ${time}`;
-        const { name } = user;
-        let { bg: fbg, forColor: fForColor } = getColor();
-        elem.bg = bg ? bg : fbg;
-        elem.forColor = forColor ? forColor : fForColor;
-        return (
-          <Grid
-            item
-            key={id}
-            sx={{
-              bgcolor: elem.bg,
-              color: elem.forColor,
-              fontWeight: "bold",
-              position: "relative",
-            }}
-            px={2}
-            pb={6}
-            pt={2}
-            xs={12}
-            sm={4}
-            md={3}
-            lg={3}
-            xl={3}
-          >
-            <Box className="quotes">
-              <Typography
-                variant="h4"
-                className={index === 0 ? "firs-quote" : ""}
-              >
-                {name}
-              </Typography>
-              <Typography
-                variant="caption"
-                display="block"
-                className={index === 0 ? "firs-quote" : ""}
-              >
-                {dateTime}
-              </Typography>
-              <Typography variant="body1" px={4} py={2}>
-                {quote}
-              </Typography>
-              <Box className="quote-footer">
-                {renderUserAction(likeCounts, favouriteBy, "favourite", id)}
+    <>
+      <AlertDialog open={open} handleClose={handleClose} />
+      <Grid container>
+        {quotes.map((elem, index) => {
+          const {
+            id,
+            quote,
+            date,
+            time,
+            user,
+            likeCounts,
+            likeBy,
+            favouriteCounts,
+            favouriteBy,
+          } = elem;
+          let { bg, forColor } = elem;
+          const dateTime = `${date} ${time}`;
+          const { name } = user;
+          let { bg: fbg, forColor: fForColor } = getColor();
+          elem.bg = bg ? bg : fbg;
+          elem.forColor = forColor ? forColor : fForColor;
+          return (
+            <Grid
+              item
+              key={id}
+              sx={{
+                bgcolor: elem.bg,
+                color: elem.forColor,
+                fontWeight: "bold",
+                position: "relative",
+              }}
+              px={2}
+              pb={6}
+              pt={2}
+              xs={12}
+              sm={4}
+              md={3}
+              lg={3}
+              xl={3}
+            >
+              <Box className="quotes">
+                <Typography
+                  variant="h4"
+                  className={index === 0 ? "firs-quote" : ""}
+                >
+                  {name}
+                </Typography>
+                <Typography
+                  variant="caption"
+                  display="block"
+                  className={index === 0 ? "firs-quote" : ""}
+                >
+                  {dateTime}
+                </Typography>
+                <Typography variant="body1" px={4} py={2}>
+                  {quote}
+                </Typography>
+                <Box className="quote-footer">
+                  {renderUserAction(
+                    favouriteCounts,
+                    favouriteBy,
+                    "favourite",
+                    id
+                  )}
+                </Box>
+                <Box
+                  className="quote-footer quote-footer-left"
+                  sx={{ width: "45px" }}
+                >
+                  {renderUserAction(likeCounts, likeBy, "like", id)}
+                </Box>
               </Box>
-              <Box
-                className="quote-footer quote-footer-left"
-                sx={{ width: "45px" }}
-              >
-                {renderUserAction(likeCounts, likeBy, "like", id)}
-              </Box>
-            </Box>
-          </Grid>
-        );
-      })}
-    </Grid>
+            </Grid>
+          );
+        })}
+      </Grid>
+    </>
   );
 }
 

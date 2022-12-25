@@ -1,5 +1,6 @@
 {
-  "name": "chat-app",
+  "name": "quote-app",
+  "homepage": "http://react-quotes.bitandpixelhub.com/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

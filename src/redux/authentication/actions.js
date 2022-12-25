@@ -11,8 +11,9 @@ import {
 } from "./types";
 
 import { setToken, getToken, deleteToken, getTokenHeader, restForm } from "../utils";
+import { APIS_URL } from "../../config";
 
-const REACT_APP_APIS_URL = process.env.REACT_APP_APIS_URL;
+const REACT_APP_APIS_URL = APIS_URL;
 
 const loginRequest = () => {
   return {

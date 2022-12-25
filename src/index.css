@@ -10,6 +10,13 @@ body {
   font-size: 14px;
 }
 
+.quotes .MuiSvgIcon-root:hover {
+  cursor: pointer;
+}
+.quotes .MuiSvgIcon-root.not-allowed:hover {
+  cursor: not-allowed;
+}
+
 .quotes p::before,
 .quotes p::after {
   content: "“";
