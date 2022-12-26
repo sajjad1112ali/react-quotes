@@ -138,7 +138,7 @@ function Quotes({ quotes, currentUser }) {
   };
 
   const handleClickOpen = (id, type) => {
-    if (type === "favourite" || "removeFavourite") {
+    if (type === "favourite" || type === "removeFavourite") {
       dispatch(likeQuote(id, type));
     } else {
       setOpen(true);
