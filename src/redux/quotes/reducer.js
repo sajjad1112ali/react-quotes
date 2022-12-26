@@ -19,15 +19,29 @@ const initialState = {
   deleteError: "",
   addCommentError: "",
 };
-
+const removeItemOnce = (arr, value) => {
+  var index = arr.indexOf(value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
+};
 const quoteActionResponse = (payload, state) => {
   const { data, uri: type } = payload;
   const { quote_id, user_id } = data;
   const index = state.quotes.findIndex((q) => q.id === quote_id);
   const actionArray = type === "like" ? "likeBy" : "favouriteBy";
   const actionCount = type === "like" ? "likeCounts" : "favouriteCounts";
-  state.quotes[index][actionArray].push(user_id);
-  state.quotes[index][actionCount] += 1;
+  if (type === "remove-favourite") {
+    state.quotes[index][actionArray] = removeItemOnce(
+      state.quotes[index][actionArray],
+      user_id
+    );
+    state.quotes[index][actionCount] -= 1;
+  } else {
+    state.quotes[index][actionArray].push(user_id);
+    state.quotes[index][actionCount] += 1;
+  }
   return state;
 };
 

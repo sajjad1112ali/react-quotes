@@ -82,7 +82,8 @@ function Quotes({ quotes, currentUser }) {
       }
       setSelectedQuote(id);
       setActionType(type);
-      handleClickOpen();
+      const addedToFavt = isLikedOrFavt ? "removeFavourite" : null;
+      handleClickOpen(id, addedToFavt || type);
     } else {
       navigate("/login");
     }
@@ -136,8 +137,12 @@ function Quotes({ quotes, currentUser }) {
     );
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpen = (id, type) => {
+    if (type === "favourite" || "removeFavourite") {
+      dispatch(likeQuote(id, type));
+    } else {
+      setOpen(true);
+    }
   };
 
   const handleClose = (proceed) => {

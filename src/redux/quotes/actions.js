@@ -40,8 +40,6 @@ const likeQuoteRequest = () => {
 };
 
 const likeQuoteSuccess = (payload) => {
-  console.log(`payload`);
-  console.log(payload);
   return {
     type: LIKE_QUOTE_REQUEST_SUCCESS,
     payload,
@@ -86,7 +84,13 @@ const fetchQuotes = (type) => {
 };
 
 const likeQuote = (id, type) => {
-  const uri = type === "like" ? "like" : "add-favourite";
+  const uriType = {
+    like: "like",
+    favourite: "add-favourite",
+    removeFavourite: "remove-favourite",
+    cc: "like",
+  };
+  const uri = uriType[type];
   const headers = getTokenHeader();
   return (dispatch) => {
     dispatch(likeQuoteRequest());
