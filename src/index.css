@@ -10,7 +10,8 @@ body {
   font-size: 14px;
 }
 
-.quotes .MuiSvgIcon-root:hover {
+.quotes .MuiSvgIcon-root:hover,
+.quotes .MuiTypography-subtitle2:hover {
   cursor: pointer;
 }
 .quotes .MuiSvgIcon-root.not-allowed:hover {

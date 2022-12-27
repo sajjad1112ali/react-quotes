@@ -27,6 +27,7 @@ import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import { Grid, Box, Typography } from "@mui/material";
 
 import AlertDialog from "../../components/AlertDialog";
+import ReadMoreDialog from "../../components/ReadMoreDialog";
 
 import { getToken } from "../../redux/utils";
 import { likeQuote } from "../../redux";
@@ -137,6 +138,26 @@ function Quotes({ quotes, currentUser }) {
     );
   };
 
+  const quoteText = (quote) => {
+    return quote.length > 210 ? (
+      <Typography variant="body1" px={4} py={2}>
+        {quote.substring(0, 210)}...
+        <Typography
+          variant="subtitle2"
+          display="inline-block"
+          sx={{ fontWeight: "bold" }}
+          onClick={() => handleReadMoreClickOpen(quote)}
+        >
+          read more
+        </Typography>
+        .
+      </Typography>
+    ) : (
+      <Typography variant="body1" px={4} py={2}>
+        {quote}
+      </Typography>
+    );
+  };
   const handleClickOpen = (id, type) => {
     if (type === "favourite" || type === "removeFavourite") {
       dispatch(likeQuote(id, type));
@@ -152,9 +173,25 @@ function Quotes({ quotes, currentUser }) {
     }
   };
 
+  const [openReadMore, setOpenReadMore] = useState(false);
+  const [readMoreQuote, setReadMoreQuote] = useState("");
+
+  const handleReadMoreClickOpen = (quote) => {
+    setOpenReadMore(true);
+    setReadMoreQuote(quote);
+  };
+  const handleReadMoreClose = () => {
+    setOpenReadMore(false);
+  };
+
   return (
     <>
       <AlertDialog open={open} handleClose={handleClose} />
+      <ReadMoreDialog
+        open={openReadMore}
+        text={readMoreQuote}
+        handleClose={handleReadMoreClose}
+      />
       <Grid container>
         {quotes.map((elem, index) => {
           const {
@@ -183,6 +220,7 @@ function Quotes({ quotes, currentUser }) {
                 color: elem.forColor,
                 fontWeight: "bold",
                 position: "relative",
+                minHeight: "250px",
               }}
               px={2}
               pb={6}
@@ -207,9 +245,8 @@ function Quotes({ quotes, currentUser }) {
                 >
                   {dateTime}
                 </Typography>
-                <Typography variant="body1" px={4} py={2}>
-                  {quote}
-                </Typography>
+                {quoteText(quote)}
+
                 <Box className="quote-footer">
                   {renderUserAction(
                     favouriteCounts,
