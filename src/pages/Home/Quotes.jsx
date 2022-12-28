@@ -32,7 +32,7 @@ import AlertDialog from "../../components/AlertDialog";
 import ReadMoreDialog from "../../components/ReadMoreDialog";
 
 import { getToken } from "../../redux/utils";
-import { likeQuote } from "../../redux";
+import { likeQuote, deleteQuote } from "../../redux";
 
 function Quotes({ quotes, currentUser, isMyQuotes }) {
   const navigate = useNavigate();
@@ -153,18 +153,19 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
           <ModeEditIcon
             className="mr-10"
             onClick={() => {
-              console.log("HELLO WORLD. . .");
+              console.log("HELLO WORLD. . .", id);
             }}
           />
           <DeleteIcon
             onClick={() => {
-              console.log("HELLO WORLD. . .DeleteIcon");
+              dispatch(deleteQuote(id));
             }}
           />
         </div>
       </Box>
     );
   };
+
   const quoteText = (quote) => {
     return quote.length > 210 ? (
       <Typography variant="body1" px={4} py={2}>
@@ -193,7 +194,8 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
     }
   };
 
-  const handleClose = (proceed) => {
+  const handleClose = (proceed, alertType) => {
+    console.log(`alertType = ${alertType}`);
     setOpen(false);
     if (proceed === "ok") {
       dispatch(likeQuote(selectedQuote, actionType));

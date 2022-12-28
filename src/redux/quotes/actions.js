@@ -14,6 +14,9 @@ const {
   ADD_QUOTE_REQUEST,
   ADD_QUOTE_REQUEST_SUCCESS,
   ADD_QUOTE_REQUEST_FAILURE,
+  DELETE_QUOTE_REQUEST,
+  DELETE_QUOTE_REQUEST_SUCCESS,
+  DELETE_QUOTE_REQUEST_FAILURE,
 } = require("./types");
 
 const fetchQuotesRequest = () => {
@@ -77,8 +80,28 @@ const addQuoteFailure = (error) => {
   };
 };
 
+// DELETE QUOTES
+const deleteQuoteRequest = () => {
+  return {
+    type: DELETE_QUOTE_REQUEST,
+  };
+};
+
+const deleteQuoteSuccess = (payload) => {
+  return {
+    type: DELETE_QUOTE_REQUEST_SUCCESS,
+    payload,
+  };
+};
+
+const deleteQuoteFailure = (error) => {
+  return {
+    type: DELETE_QUOTE_REQUEST_FAILURE,
+    payload: error,
+  };
+};
+
 const fetchQuotes = (isMyQuotes) => {
-  console.log(`type = ${isMyQuotes}`);
   let headers = {};
   const url = isMyQuotes
     ? `${REACT_APP_APIS_URL}/quotes/get/my`
@@ -151,11 +174,35 @@ const addQuote = (data, formFormikProps, navigate) => {
           navigate("/quotes");
         })
         .catch((error) => {
-          console.log(error.response.data)
           dispatch(addQuoteFailure(error.response.data.message));
           formFormikProps.setSubmitting(false);
         });
     }, 2000);
   };
 };
-export { fetchQuotes, likeQuote, addQuote };
+
+const deleteQuote = (id) => {
+  let headers = getTokenHeader();
+  const url = `${REACT_APP_APIS_URL}/quotes/${id}`;
+
+  return (dispatch) => {
+    dispatch(deleteQuoteRequest());
+    setTimeout(() => {
+      axios
+        .delete(url, { headers: { ...headers } })
+        .then((response) => {
+          dispatch(deleteQuoteSuccess(id));
+        })
+        .catch((error) => {
+          const msg =
+            error.code === "ERR_NETWORK"
+              ? error.message
+              : error.response.data.message;
+
+          dispatch(deleteQuoteFailure(msg));
+        });
+    }, 500);
+  };
+};
+
+export { fetchQuotes, likeQuote, addQuote, deleteQuote };

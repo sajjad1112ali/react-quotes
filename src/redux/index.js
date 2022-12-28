@@ -6,4 +6,9 @@ export {
   checkAuth,
   getProfile,
 } from "./authentication/actions";
-export { fetchQuotes, likeQuote, addQuote } from "./quotes/actions";
+export {
+  fetchQuotes,
+  likeQuote,
+  addQuote,
+  deleteQuote,
+} from "./quotes/actions";

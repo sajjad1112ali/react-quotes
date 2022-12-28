@@ -8,6 +8,9 @@ const {
   ADD_QUOTE_REQUEST,
   ADD_QUOTE_REQUEST_SUCCESS,
   ADD_QUOTE_REQUEST_FAILURE,
+  DELETE_QUOTE_REQUEST,
+  DELETE_QUOTE_REQUEST_SUCCESS,
+  DELETE_QUOTE_REQUEST_FAILURE,
 } = require("./types");
 
 const initialState = {
@@ -29,6 +32,15 @@ const removeItemOnce = (arr, value) => {
   }
   return arr;
 };
+
+const removeQuote = (arr, value) => {
+  const index = arr.findIndex((e) => e.id === value);
+  if (index > -1) {
+    arr.splice(index, 1);
+  }
+  return arr;
+};
+
 const quoteActionResponse = (payload, state) => {
   const { data, uri: type } = payload;
   const { quote_id, user_id } = data;
@@ -59,6 +71,7 @@ const reducer = (state = initialState, action) => {
       };
     case GET_QUOTES_REQUEST_SUCCESS:
       const { quotes, quotesLikedBy } = action.payload;
+
       return {
         ...state,
         loading: false,
@@ -97,7 +110,20 @@ const reducer = (state = initialState, action) => {
         ...state,
       };
     case ADD_QUOTE_REQUEST_FAILURE:
-      console.log(action);
+      return {
+        ...state,
+        addBlogError: action.payload,
+      };
+
+    case DELETE_QUOTE_REQUEST:
+      return state;
+    case DELETE_QUOTE_REQUEST_SUCCESS:
+      const qq = removeQuote(state.quotes, action.payload);
+      return {
+        ...state,
+        quotes: qq,
+      };
+    case DELETE_QUOTE_REQUEST_FAILURE:
       return {
         ...state,
         addBlogError: action.payload,
