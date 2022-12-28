@@ -11,7 +11,7 @@ body {
 }
 
 .quotes .MuiSvgIcon-root:hover,
-.quotes .MuiTypography-subtitle2:hover {
+.quotes .MuiTypography-p:hover {
   cursor: pointer;
 }
 .quotes .MuiSvgIcon-root.not-allowed:hover {
@@ -46,4 +46,8 @@ body {
 .quote-footer span {
   margin-top: 7px;
   margin-right: 5px;
+}
+.addQuoteForm {
+  width: 500px;
+  padding-top: 110px;
 }

@@ -143,7 +143,7 @@ function Quotes({ quotes, currentUser }) {
       <Typography variant="body1" px={4} py={2}>
         {quote.substring(0, 210)}...
         <Typography
-          variant="subtitle2"
+          variant="p"
           display="inline-block"
           sx={{ fontWeight: "bold" }}
           onClick={() => handleReadMoreClickOpen(quote)}

@@ -5,19 +5,22 @@ const {
   LIKE_QUOTE_REQUEST,
   LIKE_QUOTE_REQUEST_SUCCESS,
   LIKE_QUOTE_REQUEST_FAILURE,
+  ADD_QUOTE_REQUEST,
+  ADD_QUOTE_REQUEST_SUCCESS,
+  ADD_QUOTE_REQUEST_FAILURE,
 } = require("./types");
 
 const initialState = {
   loading: false,
   quotes: [],
   quotesLikedBy: [],
+  addBlogError: "",
   error: "",
 
   isSubmitting: false,
   singleQuote: null,
   isEdit: false,
   deleteError: "",
-  addCommentError: "",
 };
 const removeItemOnce = (arr, value) => {
   const index = arr.indexOf(value);
@@ -83,6 +86,21 @@ const reducer = (state = initialState, action) => {
     case LIKE_QUOTE_REQUEST_FAILURE:
       return {
         ...state,
+      };
+
+    case ADD_QUOTE_REQUEST:
+      return {
+        ...state,
+      };
+    case ADD_QUOTE_REQUEST_SUCCESS:
+      return {
+        ...state,
+      };
+    case ADD_QUOTE_REQUEST_FAILURE:
+      console.log(action);
+      return {
+        ...state,
+        addBlogError: action.payload,
       };
     default:
       return state;

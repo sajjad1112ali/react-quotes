@@ -1,20 +1,19 @@
 import React, { useEffect } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import LoginIcon from "@mui/icons-material/Login";
-import DashboardIcon from "@mui/icons-material/Dashboard";
+import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 // Import the circular menu
 import {
   CircleMenu,
   CircleMenuItem,
   TooltipPlacement,
 } from "react-circular-menu";
-
+import HomeIcon from "@mui/icons-material/Home";
 import { logoutUser, getProfile } from "../../../redux";
 import { getToken } from "../../../redux/utils";
-const APP_NAME = process.env.REACT_APP_NAME;
 
 function Nav() {
   const dispatch = useDispatch();
@@ -51,9 +50,16 @@ function Nav() {
       onPress: logOutOrLogin,
     },
     {
-      name: "Dashboar",
-      label: "Dashboar",
-      icon: <DashboardIcon />,
+      name: "Home",
+      label: "Home",
+      icon: <HomeIcon />,
+      onPress: () => navigate("/"),
+    },
+    {
+      name: "My Quotes",
+      label: "My Quotes",
+      icon: <FormatQuoteIcon />,
+      onPress: () => navigate("/quotes"),
     },
   ];
   const navItems = token ? logedInItems : items;

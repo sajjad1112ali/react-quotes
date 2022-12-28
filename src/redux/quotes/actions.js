@@ -11,6 +11,9 @@ const {
   LIKE_QUOTE_REQUEST,
   LIKE_QUOTE_REQUEST_SUCCESS,
   LIKE_QUOTE_REQUEST_FAILURE,
+  ADD_QUOTE_REQUEST,
+  ADD_QUOTE_REQUEST_SUCCESS,
+  ADD_QUOTE_REQUEST_FAILURE,
 } = require("./types");
 
 const fetchQuotesRequest = () => {
@@ -53,13 +56,34 @@ const likeQuoteFailure = (error) => {
   };
 };
 
-const fetchQuotes = (type) => {
+// ADD QUOTES
+const addQuoteRequest = () => {
+  return {
+    type: ADD_QUOTE_REQUEST,
+  };
+};
+
+const addQuoteSuccess = (payload) => {
+  return {
+    type: ADD_QUOTE_REQUEST_SUCCESS,
+    payload,
+  };
+};
+
+const addQuoteFailure = (error) => {
+  return {
+    type: ADD_QUOTE_REQUEST_FAILURE,
+    payload: error,
+  };
+};
+
+const fetchQuotes = (isMyQuotes) => {
+  console.log(`type = ${isMyQuotes}`);
   let headers = {};
-  const url =
-    type !== "myQuotes"
-      ? `${REACT_APP_APIS_URL}/quotes`
-      : `${REACT_APP_APIS_URL}/quotes/get/my`;
-  if (type === "myQuotes") {
+  const url = isMyQuotes
+    ? `${REACT_APP_APIS_URL}/quotes/get/my`
+    : `${REACT_APP_APIS_URL}/quotes`;
+  if (isMyQuotes) {
     headers = getTokenHeader();
   }
 
@@ -107,4 +131,31 @@ const likeQuote = (id, type) => {
   };
 };
 
-export { fetchQuotes, likeQuote };
+const restForm = (formProps) => {
+  formProps.setSubmitting(false);
+  formProps.resetForm();
+};
+
+const addQuote = (data, formFormikProps, navigate) => {
+  const headers = getTokenHeader();
+  return (dispatch) => {
+    dispatch(addQuoteRequest());
+    setTimeout(() => {
+      axios
+        .post(`${REACT_APP_APIS_URL}/quotes/add`, data, {
+          headers: { ...headers },
+        })
+        .then((response) => {
+          dispatch(addQuoteSuccess(response.data));
+          restForm(formFormikProps);
+          navigate("/quotes");
+        })
+        .catch((error) => {
+          console.log(error.response.data)
+          dispatch(addQuoteFailure(error.response.data.message));
+          formFormikProps.setSubmitting(false);
+        });
+    }, 2000);
+  };
+};
+export { fetchQuotes, likeQuote, addQuote };
