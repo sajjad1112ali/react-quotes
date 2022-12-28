@@ -35,7 +35,11 @@ function Home() {
         <Loader />
       ) : (
         <>
-          <Quotes quotes={quotes} currentUser={currentUser} />
+          <Quotes
+            quotes={quotes}
+            currentUser={currentUser}
+            isMyQuotes={isMyQuotes}
+          />
           {isMyQuotes ? (
             <Fab color="secondary" sx={fabStyle} aria-label="add">
               <AddIcon onClick={() => navigate("/quotes/add")} />

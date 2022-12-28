@@ -23,6 +23,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
 import { Grid, Box, Typography } from "@mui/material";
 
@@ -32,7 +34,7 @@ import ReadMoreDialog from "../../components/ReadMoreDialog";
 import { getToken } from "../../redux/utils";
 import { likeQuote } from "../../redux";
 
-function Quotes({ quotes, currentUser }) {
+function Quotes({ quotes, currentUser, isMyQuotes }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -100,7 +102,7 @@ function Quotes({ quotes, currentUser }) {
     };
   };
 
-  const renderUserAction = (counts, arr, type, id) => {
+  const renderUserAction = (counts, arr, type, id, classes, sx) => {
     const iconHolder = {
       favourite: {
         filled: FavoriteIcon,
@@ -120,24 +122,49 @@ function Quotes({ quotes, currentUser }) {
     const classesToAdd =
       isUserInArray && type !== "favourite" ? iconHolder[type].classes : "";
     return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flexWrap: "wrap",
-          width: "45px",
-        }}
-      >
-        <span>{counts}</span>
+      <Box className={`quote-footer ${classes}`} sx={sx}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            width: "45px",
+          }}
+        >
+          <span>{counts}</span>
 
-        <IconToShow
-          className={classesToAdd}
-          onClick={() => handleUserAction(id, type, isUserInArray)}
-        />
-      </div>
+          <IconToShow
+            className={classesToAdd}
+            onClick={() => handleUserAction(id, type, isUserInArray)}
+          />
+        </div>
+      </Box>
     );
   };
 
+  const renderDeleteAction = (type, id) => {
+    return (
+      <Box className="quote-footer">
+        <div
+          style={{
+            width: "60px",
+          }}
+        >
+          <ModeEditIcon
+            className="mr-10"
+            onClick={() => {
+              console.log("HELLO WORLD. . .");
+            }}
+          />
+          <DeleteIcon
+            onClick={() => {
+              console.log("HELLO WORLD. . .DeleteIcon");
+            }}
+          />
+        </div>
+      </Box>
+    );
+  };
   const quoteText = (quote) => {
     return quote.length > 210 ? (
       <Typography variant="body1" px={4} py={2}>
@@ -247,20 +274,28 @@ function Quotes({ quotes, currentUser }) {
                 </Typography>
                 {quoteText(quote)}
 
-                <Box className="quote-footer">
-                  {renderUserAction(
-                    favouriteCounts,
-                    favouriteBy,
-                    "favourite",
-                    id
-                  )}
-                </Box>
-                <Box
-                  className="quote-footer quote-footer-left"
-                  sx={{ width: "45px" }}
-                >
-                  {renderUserAction(likeCounts, likeBy, "like", id)}
-                </Box>
+                {!isMyQuotes
+                  ? renderUserAction(
+                      favouriteCounts,
+                      favouriteBy,
+                      "favourite",
+                      id,
+                      ""
+                    )
+                  : null}
+                {!isMyQuotes
+                  ? renderUserAction(
+                      likeCounts,
+                      likeBy,
+                      "like",
+                      id,
+                      "quote-footer-left",
+                      { width: "45px" }
+                    )
+                  : null}
+
+                {isMyQuotes ? renderDeleteAction("edit", id) : null}
+                {isMyQuotes ? renderDeleteAction("delete", id) : null}
               </Box>
             </Grid>
           );
