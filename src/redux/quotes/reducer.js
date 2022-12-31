@@ -11,6 +11,12 @@ const {
   DELETE_QUOTE_REQUEST,
   DELETE_QUOTE_REQUEST_SUCCESS,
   DELETE_QUOTE_REQUEST_FAILURE,
+  GET_SINGLE_QUOTE_REQUEST,
+  GET_SINGLE_QUOTE_REQUEST_SUCCESS,
+  GET_SINGLE_QUOTE_REQUEST_FAILURE,
+  UPDATE_QUOTE_REQUEST,
+  UPDATE_QUOTE_REQUEST_SUCCESS,
+  UPDATE_QUOTE_REQUEST_FAILURE,
 } = require("./types");
 
 const initialState = {
@@ -19,9 +25,9 @@ const initialState = {
   quotesLikedBy: [],
   addBlogError: "",
   error: "",
+  singleQuote: null,
 
   isSubmitting: false,
-  singleQuote: null,
   isEdit: false,
   deleteError: "",
 };
@@ -124,6 +130,37 @@ const reducer = (state = initialState, action) => {
         quotes: qq,
       };
     case DELETE_QUOTE_REQUEST_FAILURE:
+      return {
+        ...state,
+        addBlogError: action.payload,
+      };
+    case GET_SINGLE_QUOTE_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        singleQuote: null,
+      };
+    case GET_SINGLE_QUOTE_REQUEST_SUCCESS:
+      return {
+        ...state,
+        singleQuote: action.payload,
+        loading: false,
+      };
+    case GET_SINGLE_QUOTE_REQUEST_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        singleQuote: null,
+      };
+    case UPDATE_QUOTE_REQUEST:
+      return {
+        ...state,
+      };
+    case UPDATE_QUOTE_REQUEST_SUCCESS:
+      return {
+        ...state,
+      };
+    case UPDATE_QUOTE_REQUEST_FAILURE:
       return {
         ...state,
         addBlogError: action.payload,

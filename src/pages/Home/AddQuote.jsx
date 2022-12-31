@@ -1,25 +1,44 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { Formik, Form } from "formik";
 import { Box, Button, Alert } from "@mui/material";
 import * as yup from "yup";
 import FormikControll from "../../components/muiForm/FormikControll";
-import { addQuote } from "../../redux";
+import { addQuote, getSingleQuote, updateQuote } from "../../redux";
 
 function AddQuote() {
   const navigate = useNavigate();
-
-  const quotesData = useSelector((state) => state.quotes);
-  const { addBlogError } = quotesData;
   const dispatch = useDispatch();
 
-  const initialValues = {
-    quote: "",
-  };
+  const { id } = useParams();
+  const isAddMode = !id;
+
+  const quotesData = useSelector((state) => state.quotes);
+  const { addBlogError, singleQuote } = quotesData;
+  useEffect(() => {
+    if (!isAddMode) {
+      dispatch(getSingleQuote(id));
+    }
+  }, []);
+  let initialValues = {};
+
+  if (singleQuote) {
+    initialValues = {
+      quote: singleQuote.quote,
+    };
+  } else {
+    initialValues = {
+      quote: "",
+    };
+  }
   const onSubmit = (values, onSubmitProps) => {
-    dispatch(addQuote(values, onSubmitProps, navigate));
+    if (!isAddMode) {
+      dispatch(updateQuote(id, values, onSubmitProps, navigate));
+    } else {
+      dispatch(addQuote(values, onSubmitProps, navigate));
+    }
   };
 
   const validationSchema = yup.object({
@@ -36,6 +55,7 @@ function AddQuote() {
         onSubmit={onSubmit}
         validationSchema={validationSchema}
         initialValues={initialValues}
+        enableReinitialize
       >
         {(formik) => {
           return (
@@ -70,7 +90,7 @@ function AddQuote() {
                     disabled={!formik.isValid || formik.isSubmitting}
                     sx={{ mt: 2 }}
                   >
-                    Add
+                    {!isAddMode ? "Update" : "Add"}
                   </Button>
                 </Box>
               </Form>

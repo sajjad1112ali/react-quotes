@@ -17,6 +17,12 @@ const {
   DELETE_QUOTE_REQUEST,
   DELETE_QUOTE_REQUEST_SUCCESS,
   DELETE_QUOTE_REQUEST_FAILURE,
+  GET_SINGLE_QUOTE_REQUEST,
+  GET_SINGLE_QUOTE_REQUEST_SUCCESS,
+  GET_SINGLE_QUOTE_REQUEST_FAILURE,
+  UPDATE_QUOTE_REQUEST,
+  UPDATE_QUOTE_REQUEST_SUCCESS,
+  UPDATE_QUOTE_REQUEST_FAILURE,
 } = require("./types");
 
 const fetchQuotesRequest = () => {
@@ -101,6 +107,47 @@ const deleteQuoteFailure = (error) => {
   };
 };
 
+// GET_SINGLE QUOTES
+const getSingleQuoteRequest = () => {
+  return {
+    type: GET_SINGLE_QUOTE_REQUEST,
+  };
+};
+
+const getSingleQuoteSuccess = (payload) => {
+  return {
+    type: GET_SINGLE_QUOTE_REQUEST_SUCCESS,
+    payload,
+  };
+};
+
+const getSingleQuoteFailure = (error) => {
+  return {
+    type: GET_SINGLE_QUOTE_REQUEST_FAILURE,
+    payload: error,
+  };
+};
+
+// UPDATE QUOTES
+const updateQuoteRequest = () => {
+  return {
+    type: UPDATE_QUOTE_REQUEST,
+  };
+};
+
+const updateQuoteSuccess = (payload) => {
+  return {
+    type: UPDATE_QUOTE_REQUEST_SUCCESS,
+    payload,
+  };
+};
+
+const updateQuoteFailure = (error) => {
+  return {
+    type: UPDATE_QUOTE_REQUEST_FAILURE,
+    payload: error,
+  };
+};
 const fetchQuotes = (isMyQuotes) => {
   let headers = {};
   const url = isMyQuotes
@@ -205,4 +252,51 @@ const deleteQuote = (id) => {
   };
 };
 
-export { fetchQuotes, likeQuote, addQuote, deleteQuote };
+const getSingleQuote = (id) => {
+  let headers = getTokenHeader();
+
+  return (dispatch) => {
+    dispatch(getSingleQuoteRequest(id));
+    axios
+      .get(`${REACT_APP_APIS_URL}/quotes/${id}`, {
+        headers: { ...headers },
+      })
+      .then((response) => {
+        dispatch(getSingleQuoteSuccess(response.data));
+      })
+      .catch((error) => {
+        dispatch(
+          getSingleQuoteFailure({ message: error.response.data.message, id })
+        );
+      });
+  };
+};
+
+const updateQuote = (id, data, formFormikProps, navigate) => {
+  const headers = getTokenHeader();
+  return (dispatch) => {
+    dispatch(updateQuoteRequest());
+    axios
+      .put(`${REACT_APP_APIS_URL}/quotes/${id}`, data, {
+        headers: { ...headers },
+      })
+      .then((response) => {
+        restForm(formFormikProps);
+        dispatch(updateQuoteSuccess(response.data));
+        navigate("/quotes");
+      })
+      .catch((error) => {
+        dispatch(updateQuoteFailure(error.response.data.message));
+        formFormikProps.setSubmitting(false);
+      });
+  };
+};
+
+export {
+  fetchQuotes,
+  likeQuote,
+  addQuote,
+  deleteQuote,
+  getSingleQuote,
+  updateQuote,
+};

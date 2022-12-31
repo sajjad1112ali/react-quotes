@@ -21,6 +21,7 @@ function App() {
         <Route path="/quotes" element={<PrivateLayout />}>
           <Route index element={<Home />} />
           <Route path="add" element={<AddQuote />} />
+          <Route path="edit/:id" element={<AddQuote />} />
         </Route>
         <Route path="*" element={<Error />} />
       </Routes>

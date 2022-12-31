@@ -37,10 +37,12 @@ import { likeQuote, deleteQuote } from "../../redux";
 function Quotes({ quotes, currentUser, isMyQuotes }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const defaultAlertMsg =
+    "You won't able to revert your liked quotes. Are you sure you want to proceed?";
   const [open, setOpen] = useState(false);
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [actionType, setActionType] = useState(null);
+  const [alertMsg, setAlertMsg] = useState(defaultAlertMsg);
   const token = getToken();
   const logedInUserId = currentUser ? currentUser.id : "";
   const colors = {
@@ -78,9 +80,9 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
-  const handleUserAction = (id, type, isLikedOrFavt) => {
+  const handleUserAction = (id, type, isLikedOrFavt, isMyQuote) => {
     if (token) {
-      if (isLikedOrFavt && type === "like") {
+      if ((isLikedOrFavt && type === "like") || isMyQuote) {
         return;
       }
       setSelectedQuote(id);
@@ -102,7 +104,7 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
     };
   };
 
-  const renderUserAction = (counts, arr, type, id, classes, sx) => {
+  const renderUserAction = (counts, arr, type, id, classes, quoteBy, sx) => {
     const iconHolder = {
       favourite: {
         filled: FavoriteIcon,
@@ -121,6 +123,8 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
       : iconHolder[type].bordered;
     const classesToAdd =
       isUserInArray && type !== "favourite" ? iconHolder[type].classes : "";
+    const isMyQuote = quoteBy === logedInUserId;
+    const myQuotesClass = isMyQuote ? "not-allowed" : "";
     return (
       <Box className={`quote-footer ${classes}`} sx={sx}>
         <div
@@ -134,8 +138,8 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
           <span>{counts}</span>
 
           <IconToShow
-            className={classesToAdd}
-            onClick={() => handleUserAction(id, type, isUserInArray)}
+            className={`${classesToAdd} ${myQuotesClass}`}
+            onClick={() => handleUserAction(id, type, isUserInArray, isMyQuote)}
           />
         </div>
       </Box>
@@ -153,12 +157,12 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
           <ModeEditIcon
             className="mr-10"
             onClick={() => {
-              console.log("HELLO WORLD. . .", id);
+              navigate(`/quotes/edit/${id}`);
             }}
           />
           <DeleteIcon
             onClick={() => {
-              dispatch(deleteQuote(id));
+              handleClickOpen(id, "deleteQuote");
             }}
           />
         </div>
@@ -190,15 +194,21 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
     if (type === "favourite" || type === "removeFavourite") {
       dispatch(likeQuote(id, type));
     } else {
+      type === "deleteQuote"
+        ? setAlertMsg("Are you sure you want to delete?")
+        : setAlertMsg(defaultAlertMsg);
+      setSelectedQuote(id);
+      setActionType(type);
       setOpen(true);
     }
   };
 
   const handleClose = (proceed, alertType) => {
-    console.log(`alertType = ${alertType}`);
     setOpen(false);
     if (proceed === "ok") {
-      dispatch(likeQuote(selectedQuote, actionType));
+      alertType === "deleteQuote"
+        ? dispatch(deleteQuote(selectedQuote))
+        : dispatch(likeQuote(selectedQuote, actionType));
     }
   };
 
@@ -215,7 +225,12 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
 
   return (
     <>
-      <AlertDialog open={open} handleClose={handleClose} />
+      <AlertDialog
+        open={open}
+        actionType={actionType}
+        alertMsg={alertMsg}
+        handleClose={handleClose}
+      />
       <ReadMoreDialog
         open={openReadMore}
         text={readMoreQuote}
@@ -236,7 +251,7 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
           } = elem;
           let { bg, forColor } = elem;
           const dateTime = `${date} ${time}`;
-          const { name } = user;
+          const { id: quoteBy, name } = user;
           let { bg: fbg, forColor: fForColor } = getColor();
           elem.bg = bg ? bg : fbg;
           elem.forColor = forColor ? forColor : fForColor;
@@ -282,7 +297,8 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
                       favouriteBy,
                       "favourite",
                       id,
-                      ""
+                      "",
+                      quoteBy
                     )
                   : null}
                 {!isMyQuotes
@@ -292,12 +308,12 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
                       "like",
                       id,
                       "quote-footer-left",
+                      quoteBy,
                       { width: "45px" }
                     )
                   : null}
 
                 {isMyQuotes ? renderDeleteAction("edit", id) : null}
-                {isMyQuotes ? renderDeleteAction("delete", id) : null}
               </Box>
             </Grid>
           );

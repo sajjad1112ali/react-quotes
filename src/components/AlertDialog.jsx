@@ -6,7 +6,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function AlertDialog({ open, handleClose }) {
+export default function AlertDialog({
+  open,
+  handleClose,
+  actionType,
+  alertMsg,
+}) {
   return (
     <div>
       <Dialog
@@ -18,13 +23,12 @@ export default function AlertDialog({ open, handleClose }) {
         <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            You won't able to revert your liked quotes. Are you sure you want to
-            proceed?
+            {alertMsg}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleClose("decline")}>No</Button>
-          <Button onClick={() => handleClose("ok")} autoFocus>
+          <Button onClick={() => handleClose("decline", actionType)}>No</Button>
+          <Button onClick={() => handleClose("ok", actionType)} autoFocus>
             Yes
           </Button>
         </DialogActions>

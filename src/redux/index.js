@@ -11,4 +11,6 @@ export {
   likeQuote,
   addQuote,
   deleteQuote,
+  getSingleQuote,
+  updateQuote,
 } from "./quotes/actions";
