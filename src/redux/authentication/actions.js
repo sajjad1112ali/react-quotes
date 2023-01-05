@@ -8,9 +8,18 @@ import {
   GET_PROFILE_REQUEST,
   GET_PROFILE_SUCCESS,
   GET_PROFILE_FAILURE,
+  REGISTER_USER_REQUEST,
+  REGISTER_USER_REQUEST_SUCCESS,
+  REGISTER_USER_REQUEST_FAILURE,
 } from "./types";
 
-import { setToken, getToken, deleteToken, getTokenHeader, restForm } from "../utils";
+import {
+  setToken,
+  getToken,
+  deleteToken,
+  getTokenHeader,
+  restForm,
+} from "../utils";
 import { APIS_URL } from "../../config";
 
 const REACT_APP_APIS_URL = APIS_URL;
@@ -59,6 +68,28 @@ const getProfileFailure = (error) => {
     data: error,
   };
 };
+
+// REGISTER_USER QUOTES
+const registerUserRequest = () => {
+  return {
+    type: REGISTER_USER_REQUEST,
+  };
+};
+
+const registerUserSuccess = (data) => {
+  return {
+    type: REGISTER_USER_REQUEST_SUCCESS,
+    data,
+  };
+};
+
+const registerUserFailure = (error) => {
+  return {
+    type: REGISTER_USER_REQUEST_FAILURE,
+    data: error,
+  };
+};
+
 export const loginUser = (data, navigate, formikForm) => {
   return (dispatch) => {
     const config = {
@@ -92,28 +123,28 @@ export const logoutUser = (navigate) => {
   };
 };
 
-export const signupUser = (credentials) => {
+export const rigisterUser = (data, navigate, formikForm) => {
   return (dispatch) => {
-    return fetch(`${REACT_APP_APIS_URL}/users/register`, {
-      method: "POST",
+    const config = {
+      method: "post",
+      url: `${REACT_APP_APIS_URL}/users/register`,
       headers: {
-        Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ user: credentials }),
-    }).then((res) => {
-      if (res.ok) {
-        setToken(res.headers.get("x-auth-token"));
-        return res.json().then((userJson) => {
-          dispatch({ type: AUTHENTICATED, payload: userJson });
-        });
-      } else {
-        return res.json().then((errors) => {
-          dispatch({ type: NOT_AUTHENTICATED });
-          return Promise.reject(errors);
-        });
-      }
-    });
+      data: JSON.stringify(data),
+    };
+
+    axios(config)
+      .then((response) => {
+        navigate("/login");
+
+        dispatch(registerUserSuccess(response.data));
+        restForm(formikForm);
+      })
+      .catch((error) => {
+        restForm(formikForm, false);
+        dispatch(registerUserFailure(error.response.data.message));
+      });
   };
 };
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-
+import { Pagination } from "@mui/lab";
 import {
   common,
   blue,
@@ -26,17 +26,28 @@ import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid, Box, Typography, Tooltip } from "@mui/material";
 
 import AlertDialog from "../../components/AlertDialog";
 import ReadMoreDialog from "../../components/ReadMoreDialog";
 
 import { getToken } from "../../redux/utils";
 import { likeQuote, deleteQuote } from "../../redux";
-
+import usePagination from "./Pagination";
 function Quotes({ quotes, currentUser, isMyQuotes }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  let [page, setPage] = useState(1);
+  const PER_PAGE = 12;
+
+  const count = Math.ceil(quotes.length / PER_PAGE);
+  const _DATA = usePagination(quotes, PER_PAGE);
+
+  const handleChange = (e, p) => {
+    setPage(p);
+    _DATA.jump(p);
+  };
+
   const defaultAlertMsg =
     "You won't able to revert your liked quotes. Are you sure you want to proceed?";
   const [open, setOpen] = useState(false);
@@ -110,21 +121,26 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
         filled: FavoriteIcon,
         bordered: FavoriteBorderIcon,
         classes: "",
+        toolTipTitle: "Add to favourite",
       },
       like: {
         filled: ThumbUpIcon,
         bordered: ThumbUpOffAltIcon,
         classes: "not-allowed",
+        toolTipTitle: "Like it",
       },
     };
     const isUserInArray = arr.includes(logedInUserId);
+    const iconHolderData = iconHolder[type];
+
     const IconToShow = isUserInArray
-      ? iconHolder[type].filled
-      : iconHolder[type].bordered;
+      ? iconHolderData.filled
+      : iconHolderData.bordered;
     const classesToAdd =
-      isUserInArray && type !== "favourite" ? iconHolder[type].classes : "";
+      isUserInArray && type !== "favourite" ? iconHolderData.classes : "";
     const isMyQuote = quoteBy === logedInUserId;
     const myQuotesClass = isMyQuote ? "not-allowed" : "";
+    const tooTipTitle = isMyQuote ? "Your Quote" : iconHolderData.toolTipTitle;
     return (
       <Box className={`quote-footer ${classes}`} sx={sx}>
         <div
@@ -137,10 +153,14 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
         >
           <span>{counts}</span>
 
-          <IconToShow
-            className={`${classesToAdd} ${myQuotesClass}`}
-            onClick={() => handleUserAction(id, type, isUserInArray, isMyQuote)}
-          />
+          <Tooltip title={tooTipTitle} placement="top">
+            <IconToShow
+              className={`${classesToAdd} ${myQuotesClass}`}
+              onClick={() =>
+                handleUserAction(id, type, isUserInArray, isMyQuote)
+              }
+            />
+          </Tooltip>
         </div>
       </Box>
     );
@@ -237,7 +257,7 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
         handleClose={handleReadMoreClose}
       />
       <Grid container>
-        {quotes.map((elem, index) => {
+        {_DATA.currentData().map((elem, index) => {
           const {
             id,
             quote,
@@ -319,6 +339,24 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
           );
         })}
       </Grid>
+      {quotes.length > 12 ? (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          py={3}
+        >
+          <Pagination
+            count={count}
+            color="primary"
+            page={page}
+            onChange={handleChange}
+            size="large"
+          />
+        </Box>
+      ) : null}
     </>
   );
 }

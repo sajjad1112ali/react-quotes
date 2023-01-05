@@ -1,6 +1,6 @@
 export { addComment } from "./comments/actions";
 export {
-  signupUser,
+  rigisterUser,
   loginUser,
   logoutUser,
   checkAuth,

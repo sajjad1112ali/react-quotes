@@ -6,10 +6,10 @@ import { Formik, Form } from "formik";
 import { Box, Button, Alert } from "@mui/material";
 import * as yup from "yup";
 import FormikControll from "../../components/muiForm/FormikControll";
-import { loginUser } from "../../redux";
+import { rigisterUser } from "../../redux";
 import { getToken } from "../../redux/utils";
 
-function MUILoginForm() {
+function Register() {
   const navigate = useNavigate();
 
   const authenticationData = useSelector((state) => state.authentication);
@@ -18,18 +18,20 @@ function MUILoginForm() {
   const token = getToken();
 
   const initialValues = {
-    // email: "sajjadramzan1211@gmail.com",
-    // password: "SajjadHello1",
     email: "",
     password: "",
+    name: "",
+    phone_number: "",
   };
   const onSubmit = (values, onSubmitProps) => {
-    dispatch(loginUser(values, navigate, onSubmitProps));
+    dispatch(rigisterUser(values, navigate, onSubmitProps));
   };
 
   const validationSchema = yup.object({
     email: yup.string().required("Required").email("Invalid email address"),
     password: yup.string().required("Required"),
+    name: yup.string().required("Required"),
+    phone_number: yup.string().required("Required"),
   });
 
   if (token) {
@@ -67,6 +69,21 @@ function MUILoginForm() {
                     type="text"
                     label="Password"
                     name="password"
+                    sx={{ mt: 2, mb: 2 }}
+                  />
+                  <FormikControll
+                    controll="mui-input"
+                    type="text"
+                    label="Name"
+                    name="name"
+                    sx={{ mt: 2, mb: 2 }}
+                  />
+                  <FormikControll
+                    controll="mui-input"
+                    type="text"
+                    label="Phone Number"
+                    name="phone_number"
+                    sx={{ mt: 2, mb: 2 }}
                   />
                   <Box
                     sx={{
@@ -74,8 +91,8 @@ function MUILoginForm() {
                       justifyContent: "space-between",
                     }}
                   >
-                    <Button component={Link} to="/register">
-                      Singup
+                    <Button component={Link} to="/login">
+                      Login
                     </Button>
                     <Button
                       color="primary"
@@ -97,4 +114,4 @@ function MUILoginForm() {
   }
 }
 
-export default MUILoginForm;
+export default Register;

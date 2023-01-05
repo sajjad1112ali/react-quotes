@@ -9,6 +9,7 @@ import Error from "./pages/Error/Error";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import AddQuote from "./pages/Home/AddQuote";
+import Register from "./pages/Login/Register";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Route>
         <Route path="/quotes" element={<PrivateLayout />}>
           <Route index element={<Home />} />

@@ -51,6 +51,10 @@ body {
   width: 500px;
   padding-top: 110px;
 }
+
+.loginForm {
+  width: 500px;
+}
 .mr-10 {
   margin-right: 8px;
 }

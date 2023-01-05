@@ -1,122 +1,62 @@
-import React from "react";
-import { Box, Button } from "@mui/material";
+import * as React from "react";
+import PropTypes from "prop-types";
+import Box from "@mui/material/Box";
 
-import { Formik, Form } from "formik";
-import * as yup from "yup";
-import FormikControll from "./FormikControll";
-
-function MUICourseEnrollmentForm() {
-  const dropdownOptions = [
-    { value: "", label: "Select Course" },
-    { value: "react", label: "React" },
-    { value: "angular", label: "Angular" },
-    { value: "vue", label: "Vue" },
-  ];
-
-  const checkboxOptions = [
-    { value: "html", label: "HTML" },
-    { value: "css", label: "CSS" },
-    { value: "laravel", label: "Laravel" },
-    { value: "javascript", label: "Javascript" },
-    { value: "nodejs", label: "NodeJs" },
-    { value: "php", label: "PHP" },
-  ];
-  const initialValues = {
-    email: "",
-    bio: "",
-    course: "",
-    skillSet: [],
-    courseDate: null,
-  };
-  const onSubmit = (values, onSubmitProps) => {
-    setTimeout(() => {
-      onSubmitProps.setSubmitting(false);
-      onSubmitProps.resetForm();
-    }, 1000);
-  };
-
-  const validationSchema = yup.object({
-    email: yup.string().required("Required").email("Invalid email address"),
-    bio: yup.string().required("Required"),
-    course: yup.string().required("Required"),
-    skillSet: yup.array().min(1, "Required"),
-    courseDate: yup.date().required("Required").nullable(),
-  });
-
+function Item(props) {
+  const { sx, ...other } = props;
   return (
-    <Formik
-      onSubmit={onSubmit}
-      validationSchema={validationSchema}
-      initialValues={initialValues}
-    >
-      {(formik) => {
-        return (
-          <Box autoComplete="off">
-            <Formik
-              onSubmit={onSubmit}
-              validationSchema={validationSchema}
-              initialValues={initialValues}
-            >
-              {(formik) => {
-                return (
-                  <Box
-                    height="100vh"
-                    width="100%"
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Form noValidate>
-                      <FormikControll
-                        controll="mui-input"
-                        type="email"
-                        label="Email"
-                        name="email"
-                      />
-                      <FormikControll
-                        controll="textarea"
-                        label="About"
-                        name="bio"
-                        sx={{ mt: 2 }}
-                      />
-                      <FormikControll
-                        controll="select"
-                        label="Course To Enroll"
-                        name="course"
-                        options={dropdownOptions}
-                      />
-                      <FormikControll
-                        controll="checkbox"
-                        label="Skill Set"
-                        name="skillSet"
-                        options={checkboxOptions}
-                      />
-                      <FormikControll
-                        controll="date"
-                        label="Date"
-                        name="courseDate"
-                      />
-                      <Box textAlign="center">
-                        <Button
-                          color="primary"
-                          variant="contained"
-                          type="submit"
-                          disabled={!formik.isValid || formik.isSubmitting}
-                          sx={{ mt: 2 }}
-                        >
-                          Submit
-                        </Button>
-                      </Box>
-                    </Form>
-                  </Box>
-                );
-              }}
-            </Formik>
-          </Box>
-        );
+    <Box
+      sx={{
+        p: 1,
+        m: 1,
+        bgcolor: (theme) =>
+          theme.palette.mode === "dark" ? "#101010" : "grey.100",
+        color: (theme) =>
+          theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+        border: "1px solid",
+        borderColor: (theme) =>
+          theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+        borderRadius: 2,
+        fontSize: "0.875rem",
+        fontWeight: "700",
+        ...sx,
       }}
-    </Formik>
+      {...other}
+    />
   );
 }
 
-export default MUICourseEnrollmentForm;
+Item.propTypes = {
+  /**
+   * The system prop that allows defining system overrides as well as additional CSS styles.
+   */
+  sx: PropTypes.oneOfType([
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])
+    ),
+    PropTypes.func,
+    PropTypes.object,
+  ]),
+};
+
+export default function LoginForm() {
+  return (
+    <div style={{ width: "100%" }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          p: 1,
+          m: 1,
+          bgcolor: "yellow",
+          height: "100vh",
+          borderRadius: 1,
+        }}
+      >
+        <Item>Item 1</Item>
+        <Item>Item 2</Item>
+        <Item>Item 3</Item>
+      </Box>
+    </div>
+  );
+}

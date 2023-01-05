@@ -148,6 +148,7 @@ const updateQuoteFailure = (error) => {
     payload: error,
   };
 };
+
 const fetchQuotes = (isMyQuotes) => {
   let headers = {};
   const url = isMyQuotes
