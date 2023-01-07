@@ -66,7 +66,7 @@ function Register() {
                   />
                   <FormikControll
                     controll="mui-input"
-                    type="text"
+                    type="password"
                     label="Password"
                     name="password"
                     sx={{ mt: 2, mb: 2 }}

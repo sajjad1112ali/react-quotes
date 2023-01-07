@@ -41,6 +41,12 @@ function Nav() {
       icon: <LoginIcon />,
       onPress: logOutOrLogin,
     },
+    {
+      name: "Home",
+      label: "Home",
+      icon: <HomeIcon />,
+      onPress: () => navigate("/"),
+    },
   ];
   const logedInItems = [
     {

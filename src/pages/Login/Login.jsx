@@ -64,7 +64,7 @@ function MUILoginForm() {
                   />
                   <FormikControll
                     controll="mui-input"
-                    type="text"
+                    type="password"
                     label="Password"
                     name="password"
                   />

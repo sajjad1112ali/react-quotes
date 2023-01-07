@@ -34,6 +34,8 @@ import ReadMoreDialog from "../../components/ReadMoreDialog";
 import { getToken } from "../../redux/utils";
 import { likeQuote, deleteQuote } from "../../redux";
 import usePagination from "./Pagination";
+import { useSpring, animated } from '@react-spring/web'
+
 function Quotes({ quotes, currentUser, isMyQuotes }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -42,7 +44,10 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
 
   const count = Math.ceil(quotes.length / PER_PAGE);
   const _DATA = usePagination(quotes, PER_PAGE);
-
+  const animateConfig = useSpring({
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+  })
   const handleChange = (e, p) => {
     setPage(p);
     _DATA.jump(p);
@@ -295,12 +300,13 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
               lg={3}
               xl={3}
             >
+              <animated.div style={animateConfig}>
               <Box className="quotes">
                 <Typography
                   variant="h4"
                   className={index === 0 ? "firs-quote" : ""}
                 >
-                  {name}
+                  {name} 
                 </Typography>
                 <Typography
                   variant="caption"
@@ -335,6 +341,7 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
 
                 {isMyQuotes ? renderDeleteAction("edit", id) : null}
               </Box>
+              </animated.div>
             </Grid>
           );
         })}
