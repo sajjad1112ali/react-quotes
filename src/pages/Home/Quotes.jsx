@@ -34,7 +34,7 @@ import ReadMoreDialog from "../../components/ReadMoreDialog";
 import { getToken } from "../../redux/utils";
 import { likeQuote, deleteQuote } from "../../redux";
 import usePagination from "./Pagination";
-import { useSpring, animated } from '@react-spring/web'
+import { useSpring, animated } from "@react-spring/web";
 
 function Quotes({ quotes, currentUser, isMyQuotes }) {
   const navigate = useNavigate();
@@ -47,7 +47,8 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
   const animateConfig = useSpring({
     from: { opacity: 0 },
     to: { opacity: 1 },
-  })
+    delay: 3,
+  });
   const handleChange = (e, p) => {
     setPage(p);
     _DATA.jump(p);
@@ -301,46 +302,46 @@ function Quotes({ quotes, currentUser, isMyQuotes }) {
               xl={3}
             >
               <animated.div style={animateConfig}>
-              <Box className="quotes">
-                <Typography
-                  variant="h4"
-                  className={index === 0 ? "firs-quote" : ""}
-                >
-                  {name} 
-                </Typography>
-                <Typography
-                  variant="caption"
-                  display="block"
-                  className={index === 0 ? "firs-quote" : ""}
-                >
-                  {dateTime}
-                </Typography>
-                {quoteText(quote)}
+                <Box className="quotes">
+                  <Typography
+                    variant="h4"
+                    className={index === 0 ? "firs-quote" : ""}
+                  >
+                    {name}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    display="block"
+                    className={index === 0 ? "firs-quote" : ""}
+                  >
+                    {dateTime}
+                  </Typography>
+                  {quoteText(quote)}
 
-                {!isMyQuotes
-                  ? renderUserAction(
-                      favouriteCounts,
-                      favouriteBy,
-                      "favourite",
-                      id,
-                      "",
-                      quoteBy
-                    )
-                  : null}
-                {!isMyQuotes
-                  ? renderUserAction(
-                      likeCounts,
-                      likeBy,
-                      "like",
-                      id,
-                      "quote-footer-left",
-                      quoteBy,
-                      { width: "45px" }
-                    )
-                  : null}
+                  {!isMyQuotes
+                    ? renderUserAction(
+                        favouriteCounts,
+                        favouriteBy,
+                        "favourite",
+                        id,
+                        "",
+                        quoteBy
+                      )
+                    : null}
+                  {!isMyQuotes
+                    ? renderUserAction(
+                        likeCounts,
+                        likeBy,
+                        "like",
+                        id,
+                        "quote-footer-left",
+                        quoteBy,
+                        { width: "45px" }
+                      )
+                    : null}
 
-                {isMyQuotes ? renderDeleteAction("edit", id) : null}
-              </Box>
+                  {isMyQuotes ? renderDeleteAction("edit", id) : null}
+                </Box>
               </animated.div>
             </Grid>
           );
